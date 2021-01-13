@@ -13,11 +13,21 @@ try:
 except ImportError:
     pass
 
-try:
-    from . import gis
-except Exception:
-    import warnings
-    warnings.warn(
-        "Unable to import floppyforms.gis, geometry widgets not available")
+from django.conf import settings
+if hasattr(settings, "FLOPPYFORMS_USE_GIS"):
+    USE_GIS = settings.FLOPPYFORMS_USE_GIS
+else:
+    USE_GIS = True
+if USE_GIS:
+    try:
+        from . import gis
+    except Exception:
+        import warnings
+        warnings.warn(
+            """
+            Unable to import floppyforms.gis, geometry widgets not available.
+            Set FLOPPYFORMS_USE_GIS=False in settings to suppress this warning.
+            """
+        )
 
 __version__ = '1.9.0'
